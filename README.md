@@ -1,11 +1,17 @@
-# Super Mario Implementation in Python
+# Super Mario Neuro-Evolution Implementation in Python
 
-This is inspired by Meth-Meth-Method's: https://github.com/meth-meth-method/super-mario/
+This is inspired by mx0c: https://github.com/mx0c/super-mario-python
 
-## Running
+## Setup
 
-* $ pip install pygame scipy
-* $ python main.py
+### 1. Install Torch
+
+Here's how to install torch: https://pytorch.org/
+I reccomend installing it with conda.
+
+### 2. Install Dependencies
+
+* $ pip install -r requirements.txt
 
 ## Standalone windows build
 
@@ -14,20 +20,7 @@ This is inspired by Meth-Meth-Method's: https://github.com/meth-meth-method/supe
 
 ## Controls
 
-* Left: Move left  
-* Right: Move right  
-* Space: Jump  
-* Shift: Boost   
-* Left/Right Mouseclick: secret   
+
 
 ## Current state:
 ![Alt text](img/pictures.PNG "current state")
-
-## Dependencies
-* pygame
-* scipy
-
-## Contribution
-
-If you have any Improvements/Ideas/Refactors feel free to contact me or make a Pull Request.
-The code needs still alot of refactoring as it is right now, so i appreciate any kind of Contribution.
