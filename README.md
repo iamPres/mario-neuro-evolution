@@ -23,4 +23,4 @@ I reccomend installing it with conda.
 
 
 ## Current state:
-![Alt text](img/WORKING.PNG "current state")
+![Alt text](img/WORKING.png "current state")
