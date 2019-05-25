@@ -24,7 +24,7 @@ This trainer comes with many useful debugging fuctions:
 Press LEFT SHIFT to enable / disable mutation for the following iteration  
 Press RIGHT to fast foward through a bot if it is standing still (DO NOT USE IF BOT IS MOVING)  
 Press S to save the current bot's neural architecture into the Models/ folder  
-Press L to load the any neual architecture located in the root project directory
+Press L to load the any neual architecture located in the root project directory (The program will only load a model named bot.mdl)
 
 ## Net Architecture
 
