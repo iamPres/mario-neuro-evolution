@@ -1,8 +1,11 @@
 import pygame
+import math
+import numpy as np
 
 from classes.Animation import Animation
 from classes.Camera import Camera
 from classes.Collider import Collider
+from entities.CollisonTester import CollisionTester
 from classes.EntityCollider import EntityCollider
 from classes.Input import Input
 from classes.Sprites import Sprites
@@ -11,16 +14,28 @@ from traits.bounce import bounceTrait
 from traits.go import goTrait
 from traits.jump import jumpTrait
 from classes.Pause import Pause
+from classes.Model import Model
+from entities.Goomba import Goomba
+from entities.Koopa import Koopa
+import torch
 
 
 class Mario(EntityBase):
     def __init__(self, x, y, level, screen, dashboard, sound, gravity=0.75):
         super(Mario, self).__init__(x, y, gravity)
+        self.x = x
         self.spriteCollection = Sprites().spriteCollection
+        self.CT = CollisionTester()
         self.camera = Camera(self.rect, self)
         self.sound = sound
-        self.input = Input(self)
+        self.level = level
+        self.OI = Input(self)
+        self.closest_mob = None
+        self.closest_object = None
+        self.output =0
         self.inAir = False
+        self.brain = Model().share_memory()
+        self.fitness = 0
 
         self.animation = Animation(
             [
@@ -47,13 +62,27 @@ class Mario(EntityBase):
         self.pause = False
         self.pauseObj = Pause(screen, self, dashboard)
 
+    def getInputs(self):
+        map = []
+        input = []
+        for x in range(60):
+            map.append(self.CT.test(x, 11, self.level, self))
+            if map[x] == 3:
+                map[x] = 0
+
+        for x in range(int(self.rect.x/32), int(self.rect.x/32) + 8):
+            input.append(map[x])
+        return torch.FloatTensor(input)
+
     def update(self):
         self.updateTraits()
         self.moveMario()
         self.camera.move()
         self.applyGravity()
         self.checkEntityCollision()
-        self.input.checkForInput()
+        self.output = self.brain.forward(self.getInputs())
+        #print(self.output)
+        self.OI.checkForInput(self.output)
 
     def moveMario(self):
         self.rect.y += self.vel.y
@@ -119,26 +148,6 @@ class Mario(EntityBase):
         self.dashboard.points += 100
 
     def gameOver(self):
-        srf = pygame.Surface((640, 480))
-        srf.set_colorkey((255, 255, 255), pygame.RLEACCEL)
-        srf.set_alpha(128)
-        self.sound.music_channel.stop()
-        self.sound.music_channel.play(self.sound.death)
-
-        for i in range(500, 20, -2):
-            srf.fill((0, 0, 0))
-            pygame.draw.circle(
-                srf,
-                (255, 255, 255),
-                (int(self.camera.x + self.rect.x) + 16, self.rect.y + 16),
-                i,
-            )
-            self.screen.blit(srf, (0, 0))
-            pygame.display.update()
-            self.input.checkForInput()
-        while self.sound.music_channel.get_busy():
-            pygame.display.update()
-            self.input.checkForInput()
         self.restart = True
 
     def getPos(self):

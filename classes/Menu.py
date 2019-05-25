@@ -134,50 +134,8 @@ class Menu:
         self.dashboard.drawText("BACK", 180, 360, 24)
 
     def checkInput(self):
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-                elif event.key == pygame.K_UP:
-                    if self.state > 0:
-                        self.state -= 1
-                elif event.key == pygame.K_DOWN:
-                    if self.state < 2:
-                        self.state += 1
-                elif event.key == pygame.K_RETURN:
-                    if not self.inSettings:
-                        if self.state == 0:
-                            self.dashboard.state = "play"
-                            self.dashboard.time = 0
-                            self.start = True
-                        elif self.state == 1:
-                            self.inSettings = True
-                            self.state = 0
-                        elif self.state == 2:
-                            pygame.quit()
-                            sys.exit()
-                    else:
-                        if self.state == 0:
-                            if self.music:
-                                self.sound.music_channel.stop()
-                                self.music = False
-                            else:
-                                self.sound.music_channel.play(self.sound.soundtrack)
-                                self.music = True
-                            self.saveSettings("./settings.json")
-                        elif self.state == 1:
-                            if self.sfx:
-                                self.sound.allowSFX = False
-                                self.sfx = False
-                            else:
-                                self.sound.allowSFX = True
-                                self.sfx = True
-                            self.saveSettings("./settings.json")
-                        elif self.state == 2:
-                            self.inSettings = False
+        self.dashboard.state = "play"
+        self.dashboard.time = 0
+        self.start = True
+
         pygame.display.update()

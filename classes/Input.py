@@ -1,7 +1,8 @@
 import pygame
 from pygame.locals import *
+import torch
+from entities.EntityBase import EntityBase
 import sys
-
 
 class Input:
     def __init__(self, entity):
@@ -9,25 +10,26 @@ class Input:
         self.mouseY = 0
         self.entity = entity
 
-    def checkForInput(self):
-        self.checkForKeyboardInput()
+
+    def checkForInput(self, input):
+        self.checkForKeyboardInput(input)
         self.checkForMouseInput()
         self.checkForQuitAndRestartInputEvents()
 
-    def checkForKeyboardInput(self):
-        pressedKeys = pygame.key.get_pressed()
+    def checkForKeyboardInput(self, input):
+        pressedKeys = input
 
-        if pressedKeys[K_LEFT] and not pressedKeys[K_RIGHT]:
+        if pressedKeys[0] > 0 and not pressedKeys[1] > 0: # Left / Right
             self.entity.traits["goTrait"].direction = -1
-        elif pressedKeys[K_RIGHT] and not pressedKeys[K_LEFT]:
+        elif pressedKeys[1] > 0 and not pressedKeys[0] > 0:
             self.entity.traits["goTrait"].direction = 1
         else:
             self.entity.traits['goTrait'].direction = 0
 
-        jump = pressedKeys[K_SPACE] or pressedKeys[K_UP]
+        jump = pressedKeys[2] > 0 # Space / Up
         self.entity.traits['jumpTrait'].jump(jump)
 
-        self.entity.traits['goTrait'].boost = pressedKeys[K_LSHIFT]
+        self.entity.traits['goTrait'].boost = pressedKeys[3] > 0 # Boost
 
     def checkForMouseInput(self):
         mouseX, mouseY = pygame.mouse.get_pos()

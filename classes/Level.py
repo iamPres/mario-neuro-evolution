@@ -2,6 +2,7 @@ import json
 
 import pygame
 
+from classes.Trainer import Trainer
 from classes.Sprites import Sprites
 from classes.Tile import Tile
 from entities.Coin import Coin
@@ -19,7 +20,8 @@ class Level:
         self.level = None
         self.levelLength = 0
         self.entityList = []
-        self.loadLevel("Level1-1.json")
+        self.data = self.loadLevel("Level1-1.json")
+
 
     def loadLevel(self, levelname):
         with open("./levels/{}".format(levelname)) as jsonData:
@@ -28,11 +30,12 @@ class Level:
             self.loadObjects(data)
             self.loadEntities(data)
             self.levelLength = data["length"]
+        return data
 
     def loadEntities(self, data):
         [self.addRandomBox(x, y) for x, y in data["level"]["entities"]["randomBox"]]
-        [self.addGoomba(x, y) for x, y in data["level"]["entities"]["Goomba"]]
-        [self.addKoopa(x, y) for x, y in data["level"]["entities"]["Koopa"]]
+        #[self.addGoomba(x, y) for x, y in data["level"]["entities"]["Goomba"]]
+        #[self.addKoopa(x, y) for x, y in data["level"]["entities"]["Koopa"]]
         [self.addCoin(x, y) for x, y in data["level"]["entities"]["coin"]]
 
     def loadLayers(self, data):
@@ -64,11 +67,11 @@ class Level:
             self.addPipeSprite(x, y, z)
         for x, y in data["level"]["objects"]["sky"]:
             self.level[y][x] = Tile(self.sprites.spriteCollection.get("sky"), None)
-        for x, y in data["level"]["objects"]["ground"]:
-            self.level[y][x] = Tile(
-                self.sprites.spriteCollection.get("ground"),
-                pygame.Rect(x * 32, y * 32, 32, 32),
-            )
+        #for x, y in data["level"]["objects"]["ground"]:
+            #self.level[y][x] = Tile(
+                #self.sprites.spriteCollection.get("ground"),
+                #pygame.Rect(x * 32, y * 32, 32, 32),
+            #)
 
     def updateEntities(self, cam):
         for entity in self.entityList:

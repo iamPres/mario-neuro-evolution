@@ -5,10 +5,10 @@ from classes.Collider import Collider
 
 class LeftRightWalkTrait:
     def __init__(self, entity, level):
-        self.direction = -1 if randint(0, 1) == 0 else 1
+        self.direction = -1
         self.entity = entity
         self.collDetection = Collider(self.entity, level)
-        self.speed = 1
+        self.speed = 5
         self.entity.vel.x = self.speed * self.direction
 
     def update(self):

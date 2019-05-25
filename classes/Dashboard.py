@@ -1,7 +1,6 @@
 import pygame
-
 from classes.Font import Font
-
+from entities.CollisonTester import CollisionTester
 
 class Dashboard(Font):
     def __init__(self, filePath, size, screen):
@@ -13,25 +12,34 @@ class Dashboard(Font):
         self.coins = 0
         self.ticks = 0
         self.time = 0
+        self.CT = CollisionTester()
 
     def update(self):
-        self.drawText("MARIO", 50, 20, 15)
-        self.drawText(self.pointString(), 50, 37, 15)
-
-        self.drawText("@x{}".format(self.coinString()), 225, 37, 15)
-
-        self.drawText("WORLD", 380, 20, 15)
-        self.drawText(str(self.levelName), 395, 37, 15)
-
-        self.drawText("TIME", 520, 20, 15)
-        if self.state != "menu":
-            self.drawText(self.timeString(), 535, 37, 15)
+        self.drawText("TIME", 450, 20, 15)
+        self.drawText(self.timeString(), 455, 37, 15)
 
         # update Time
         self.ticks += 1
         if self.ticks == 60:
             self.ticks = 0
             self.time += 1
+
+    def drawGrid(self, level, mario):
+        input = [[pygame.Color(0,0,0)]*15]*60
+        color = pygame.Color(0,0,0)
+        arr = []
+        for x in range(int(mario.rect.x/32) - 1, int(mario.rect.x/32) + 8):
+            arr.append(x)
+            for y in range(11):
+                input[x][y] = self.CT.test(x,y,level,mario)
+                if input[x][y] == 0:
+                    color = pygame.Color(0,0,255)
+                if input[x][y] == 1:
+                    color = pygame.Color(255,255,255)
+                if input[x][y] == -1:
+                    color = pygame.Color(255,0,0)
+                if not input[x][y] == 3:
+                    pygame.draw.rect(self.screen, color, ((x * 8), y * 8, 8, 8))
 
     def drawText(self, text, x, y, size):
         for char in text:
